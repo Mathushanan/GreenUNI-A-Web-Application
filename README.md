@@ -3,5 +3,4 @@ Welcome to the GreenUNI a dynamic and interactive platform designed to foster co
 
 
 
-Technologies Used
-MongoDB, Express.js, React, Node.js
+Technologies Used : MongoDB, Express.js, React, Node.js
