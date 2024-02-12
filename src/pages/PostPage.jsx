@@ -1,6 +1,7 @@
 const PostPage = () => {
   return (
     <div>
+      hi
       
     </div>
   )
