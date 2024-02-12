@@ -5,7 +5,7 @@ import { Box, Flex, Text } from "@chakra-ui/layout";
 import { BsThreeDots } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useState} from "react";
-import Actions from "./Actions";
+import Actions from "../components/Actions";
 
 
 const UserPost = ({postImg,postTitle,likes,replies}) => {

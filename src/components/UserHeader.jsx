@@ -38,7 +38,10 @@ const UserHeader = () => {
                     <Avatar
                         name="Mark Zuzerburg"
                         src="/zuck-avatar.png"
-                        size={"xl"}
+                        size={{
+                            base: "md",
+                            md: "xl",
+                        }}
                     />
                 </Box>
 
