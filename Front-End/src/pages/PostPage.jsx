@@ -1,4 +1,4 @@
-import { Avatar, Flex, Text, Image, Box, Divider, Button } from "@chakra-ui/react"
+import { Avatar, Flex, Text, Image, Box, Divider, Button, AvatarBadge } from "@chakra-ui/react"
 import { BsThreeDots } from "react-icons/bs"
 import { useState } from "react";
 import Actions from "../components/Actions";
@@ -15,6 +15,8 @@ const PostPage = () => {
       <Flex>
         <Flex w={"full"} alignItems={"center"} gap={3}>
           <Avatar src="/zuck-avatar.png" size={"md"} name="Mark Zuzerberg" />
+
+
           <Flex>
             <Text fontSize={"sm"} fontWeight={"bold"}>mark Zukerberg</Text>
             <Image src='/verified.png' w={4} h={4} ml={4} />
