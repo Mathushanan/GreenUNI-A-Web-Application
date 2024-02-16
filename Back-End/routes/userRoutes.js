@@ -3,8 +3,10 @@ import {
 	
 	signupUser,
 	loginUser,
-	logoutUser
+	logoutUser,
+	followUnFollowUser
 } from "../controllers/userController.js";
+import protectRoute from "../middleWares/protectRoute.js";
 
 
 const router = express.Router();
@@ -13,6 +15,7 @@ const router = express.Router();
 router.post("/signup", signupUser);
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
+router.post("/follow/:id", protectRoute, followUnFollowUser);
 
 
 export default router;
