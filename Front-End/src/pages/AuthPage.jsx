@@ -1,14 +1,15 @@
 
 import LoginCard from "../components/LoginCard";
 import SignupCard from "../components/SignupCard";
+import authScreenAtom from "../atoms/authAtom";
+import { useRecoilValue } from "recoil";
 
 const AuthPage = () => {
 
+    const authScreenState = useRecoilValue(authScreenAtom);
 
-    return( 
-    <>
-        <LoginCard />
-    </>);
+
+    return <>{authScreenState === "login" ? <LoginCard /> : <SignupCard />}</>;
 };
 
 export default AuthPage;

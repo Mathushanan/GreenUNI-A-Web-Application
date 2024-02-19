@@ -16,22 +16,25 @@ import {
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
+import authScreenAtom from '../atoms/authAtom';
+import { useSetRecoilState } from 'recoil';
 
 export default function SignupCard() {
   const [showPassword, setShowPassword] = useState(false)
+  const setAuthScreen = useSetRecoilState(authScreenAtom);
 
   return (
     <Flex
-      
+
       align={'center'}
       justify={'center'}
-      >
+    >
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
         <Stack align={'center'}>
           <Heading fontSize={'4xl'} textAlign={'center'}>
             Sign up
           </Heading>
-          
+
         </Stack>
         <Box
           rounded={'lg'}
@@ -41,7 +44,7 @@ export default function SignupCard() {
           <Stack spacing={4}>
             <HStack>
               <Box>
-                <FormControl  isRequired>
+                <FormControl isRequired>
                   <FormLabel>Full Name</FormLabel>
                   <Input type="text" />
                 </FormControl>
@@ -53,11 +56,11 @@ export default function SignupCard() {
                 </FormControl>
               </Box>
             </HStack>
-            <FormControl  isRequired>
+            <FormControl isRequired>
               <FormLabel>Email address</FormLabel>
               <Input type="email" />
             </FormControl>
-            <FormControl  isRequired>
+            <FormControl isRequired>
               <FormLabel>Password</FormLabel>
               <InputGroup>
                 <Input type={showPassword ? 'text' : 'password'} />
@@ -74,17 +77,20 @@ export default function SignupCard() {
               <Button
                 loadingText="Submitting"
                 size="lg"
-                bg={useColorModeValue("gray.600","gray.700")}
+                bg={useColorModeValue("gray.600", "gray.700")}
                 color={'white'}
                 _hover={{
-                  bg: useColorModeValue("gray.700","gray.800")
+                  bg: useColorModeValue("gray.700", "gray.800")
                 }}>
                 Sign up
               </Button>
             </Stack>
             <Stack pt={6}>
               <Text align={'center'}>
-                Already a user? <Link color={'blue.400'}>Login</Link>
+                Already a user?{" "}
+                <Link color={"blue.400"} onClick={() => setAuthScreen("login")}>
+                  Login
+                </Link>
               </Text>
             </Stack>
           </Stack>
