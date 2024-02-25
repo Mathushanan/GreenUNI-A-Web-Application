@@ -46,7 +46,7 @@ const Actions = ({ post }) => {
 			if (data.error) return showToast("Error", data.error, "error");
 
 			if (!liked) {
-				// add the id of the current user to post.likes array
+		
 				const updatedPosts = posts.map((p) => {
 					if (p._id === post._id) {
 						return { ...p, likes: [...p.likes, user._id] };
@@ -55,7 +55,7 @@ const Actions = ({ post }) => {
 				});
 				setPosts(updatedPosts);
 			} else {
-				// remove the id of the current user from post.likes array
+				
 				const updatedPosts = posts.map((p) => {
 					if (p._id === post._id) {
 						return { ...p, likes: p.likes.filter((id) => id !== user._id) };

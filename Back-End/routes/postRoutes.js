@@ -1,6 +1,6 @@
 import express from "express";
 import {
-	createPost,getPost,deletePost,likeUnlikePost,replyToPost,getFeedPosts
+	createPost,getPost,deletePost,likeUnlikePost,replyToPost,getFeedPosts, getUserPosts
 } from "../controllers/postController.js";
 import protectRoute from "../middleWares/protectRoute.js";
 
@@ -13,5 +13,6 @@ router.post("/create",protectRoute, createPost);
 router.delete("/:id", protectRoute, deletePost);
 router.put("/like/:id", protectRoute, likeUnlikePost);
 router.put("/reply/:id", protectRoute, replyToPost);
+router.get("/user/:username", getUserPosts);
 
 export default router;
