@@ -93,8 +93,10 @@ const CreatePost = () => {
 				bg={useColorModeValue("gray.300", "gray.dark")}
 				onClick={onOpen}
 				size={{ base: "sm", sm: "md" }}
+				leftIcon={<AddIcon />}
 			>
-				<AddIcon />
+				Post
+				
 			</Button>
 
 			<Modal isOpen={isOpen} onClose={onClose}>

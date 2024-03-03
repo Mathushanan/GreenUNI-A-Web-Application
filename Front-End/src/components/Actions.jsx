@@ -46,7 +46,7 @@ const Actions = ({ post }) => {
 			if (data.error) return showToast("Error", data.error, "error");
 
 			if (!liked) {
-		
+				
 				const updatedPosts = posts.map((p) => {
 					if (p._id === post._id) {
 						return { ...p, likes: [...p.likes, user._id] };
