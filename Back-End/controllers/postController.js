@@ -2,34 +2,49 @@ import Post from "../models/postModel.js";
 import User from "../models/userModel.js";
 import { v2 as cloudinary } from "cloudinary";
 
+
+
+
+// Function to create a new post
 const createPost = async (req, res) => {
 	try {
 		const { postedBy, text } = req.body;
 		let { img } = req.body;
 
+
+		// Validation checks for required fields
 		if (!postedBy || !text) {
 			return res.status(400).json({ error: "Postedby and text fields are required" });
 		}
 
+
+		// Check if the user exists
 		const user = await User.findById(postedBy);
 		if (!user) {
 			return res.status(404).json({ error: "User not found" });
 		}
 
+
+		// Check if the current user is authorized to create the post
 		if (user._id.toString() !== req.user._id.toString()) {
 			return res.status(401).json({ error: "Unauthorized to create post" });
 		}
 
+		// Check text length
 		const maxLength = 500;
 		if (text.length > maxLength) {
 			return res.status(400).json({ error: `Text must be less than ${maxLength} characters` });
 		}
 
+
+		// Upload image to Cloudinary if exists
 		if (img) {
 			const uploadedResponse = await cloudinary.uploader.upload(img);
 			img = uploadedResponse.secure_url;
 		}
 
+
+		// Create new post and save it
 		const newPost = new Post({ postedBy, text, img });
 		await newPost.save();
 
@@ -40,6 +55,9 @@ const createPost = async (req, res) => {
 	}
 };
 
+
+
+// Function to get a post by ID
 const getPost = async (req, res) => {
 	try {
 		const post = await Post.findById(req.params.id);
@@ -54,6 +72,8 @@ const getPost = async (req, res) => {
 	}
 };
 
+
+// Function to delete a post by ID
 const deletePost = async (req, res) => {
 	try {
 		const post = await Post.findById(req.params.id);
@@ -78,6 +98,8 @@ const deletePost = async (req, res) => {
 	}
 };
 
+
+// Function to like or unlike a post
 const likeUnlikePost = async (req, res) => {
 	try {
 		const { id: postId } = req.params;
@@ -106,6 +128,9 @@ const likeUnlikePost = async (req, res) => {
 	}
 };
 
+
+
+// Function to reply to a post
 const replyToPost = async (req, res) => {
 	try {
 		const { text } = req.body;
@@ -134,6 +159,9 @@ const replyToPost = async (req, res) => {
 	}
 };
 
+
+
+// Function to get feed posts for the current user
 const getFeedPosts = async (req, res) => {
 	try {
 		const userId = req.user._id;
@@ -144,6 +172,7 @@ const getFeedPosts = async (req, res) => {
 
 		const following = user.following;
 
+		 // Find posts by users the current user is following, sorted by creation time
 		const feedPosts = await Post.find({ postedBy: { $in: following } }).sort({ createdAt: -1 });
 
 		res.status(200).json(feedPosts);
@@ -152,6 +181,8 @@ const getFeedPosts = async (req, res) => {
 	}
 };
 
+
+// Function to get posts by a specific user
 const getUserPosts = async (req, res) => {
 	const { username } = req.params;
 	try {
@@ -160,6 +191,8 @@ const getUserPosts = async (req, res) => {
 			return res.status(404).json({ error: "User not found" });
 		}
 
+
+        // Find posts by the user, sorted by creation time
 		const posts = await Post.find({ postedBy: user._id }).sort({ createdAt: -1 });
 
 		res.status(200).json(posts);

@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 
+
+
+// Define post schema
 const postSchema = mongoose.Schema(
 	{
 		postedBy: {
@@ -45,6 +48,9 @@ const postSchema = mongoose.Schema(
 	}
 );
 
+
+
+// Create Post model from the post schema
 const Post = mongoose.model("Post", postSchema);
 
 export default Post;

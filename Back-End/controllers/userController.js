@@ -5,6 +5,9 @@ import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCooki
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from "mongoose";
 
+
+
+// Function to get user profile by ID or username
 const getUserProfile = async (req, res) => {
 
 	const { query } = req.params;
@@ -12,6 +15,7 @@ const getUserProfile = async (req, res) => {
 	try {
 		let user;
 
+		// Check if the query is a valid ObjectId, if so, search by _id, else search by username
 		if (mongoose.Types.ObjectId.isValid(query)) {
 			user = await User.findOne({ _id: query }).select("-password").select("-updatedAt");
 		} else {
@@ -28,6 +32,8 @@ const getUserProfile = async (req, res) => {
 	}
 };
 
+
+// Function to sign up a new user
 const signupUser = async (req, res) => {
 	try {
 		const { name, email, username, password } = req.body;
@@ -36,6 +42,9 @@ const signupUser = async (req, res) => {
 		if (user) {
 			return res.status(400).json({ error: "User already exists" });
 		}
+
+
+		// Hash the password
 		const salt = await bcrypt.genSalt(10);
 		const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -47,6 +56,8 @@ const signupUser = async (req, res) => {
 		});
 		await newUser.save();
 
+
+		// Generate token and set cookie
 		if (newUser) {
 			generateTokenAndSetCookie(newUser._id, res);
 
@@ -67,6 +78,8 @@ const signupUser = async (req, res) => {
 	}
 };
 
+
+// Function to log in a user
 const loginUser = async (req, res) => {
 	try {
 		const { username, password } = req.body;
@@ -75,11 +88,15 @@ const loginUser = async (req, res) => {
 
 		if (!user || !isPasswordCorrect) return res.status(400).json({ error: "Invalid username or password" });
 
+
+		// If user was frozen, unfreeze them
 		if (user.isFrozen) {
 			user.isFrozen = false;
 			await user.save();
 		}
 
+
+		// Generate token and set cookie
 		generateTokenAndSetCookie(user._id, res);
 
 		res.status(200).json({
@@ -96,8 +113,12 @@ const loginUser = async (req, res) => {
 	}
 };
 
+
+// Function to log out a user
 const logoutUser = (req, res) => {
 	try {
+
+		// Clear JWT cookie
 		res.cookie("jwt", "", { maxAge: 1 });
 		res.status(200).json({ message: "User logged out successfully" });
 	} catch (err) {
@@ -106,12 +127,16 @@ const logoutUser = (req, res) => {
 	}
 };
 
+
+
+// Function to follow or unfollow a user
 const followUnFollowUser = async (req, res) => {
 	try {
 		const { id } = req.params;
 		const userToModify = await User.findById(id);
 		const currentUser = await User.findById(req.user._id);
 
+		// Prevent following/unfollowing self
 		if (id === req.user._id.toString())
 			return res.status(400).json({ error: "You cannot follow/unfollow yourself" });
 
@@ -121,11 +146,13 @@ const followUnFollowUser = async (req, res) => {
 
 		if (isFollowing) {
 
+			// Unfollow user
 			await User.findByIdAndUpdate(id, { $pull: { followers: req.user._id } });
 			await User.findByIdAndUpdate(req.user._id, { $pull: { following: id } });
 			res.status(200).json({ message: "User unfollowed successfully" });
 		} else {
 
+			// Follow user
 			await User.findByIdAndUpdate(id, { $push: { followers: req.user._id } });
 			await User.findByIdAndUpdate(req.user._id, { $push: { following: id } });
 			res.status(200).json({ message: "User followed successfully" });
@@ -136,6 +163,9 @@ const followUnFollowUser = async (req, res) => {
 	}
 };
 
+
+
+// Function to update user profile
 const updateUser = async (req, res) => {
 	const { name, email, username, password, bio } = req.body;
 	let { profilePic } = req.body;
@@ -145,15 +175,20 @@ const updateUser = async (req, res) => {
 		let user = await User.findById(userId);
 		if (!user) return res.status(400).json({ error: "User not found" });
 
+
+		// Check if the user is updating their own profile
 		if (req.params.id !== userId.toString())
 			return res.status(400).json({ error: "You cannot update other user's profile" });
 
+
+		// Hash the password if provided
 		if (password) {
 			const salt = await bcrypt.genSalt(10);
 			const hashedPassword = await bcrypt.hash(password, salt);
 			user.password = hashedPassword;
 		}
 
+		// Upload profile picture to Cloudinary
 		if (profilePic) {
 			if (user.profilePic) {
 				await cloudinary.uploader.destroy(user.profilePic.split("/").pop().split(".")[0]);
@@ -163,6 +198,7 @@ const updateUser = async (req, res) => {
 			profilePic = uploadedResponse.secure_url;
 		}
 
+		// Update user fields
 		user.name = name || user.name;
 		user.email = email || user.email;
 		user.username = username || user.username;
@@ -171,7 +207,7 @@ const updateUser = async (req, res) => {
 
 		user = await user.save();
 
-	
+		// Update username and profile picture in post replies
 		await Post.updateMany(
 			{ "replies.userId": userId },
 			{
@@ -192,13 +228,19 @@ const updateUser = async (req, res) => {
 	}
 };
 
+
+// Function to get suggested users for the current user
 const getSuggestedUsers = async (req, res) => {
 	try {
 		
 		const userId = req.user._id;
 
+
+		// Function to get suggested users for the current user
 		const usersFollowedByYou = await User.findById(userId).select("following");
 
+
+		// Get random users not followed by the current user
 		const users = await User.aggregate([
 			{
 				$match: {
@@ -212,6 +254,7 @@ const getSuggestedUsers = async (req, res) => {
 		const filteredUsers = users.filter((user) => !usersFollowedByYou.following.includes(user._id));
 		const suggestedUsers = filteredUsers.slice(0, 4);
 
+		// Clear password field before sending response
 		suggestedUsers.forEach((user) => (user.password = null));
 
 		res.status(200).json(suggestedUsers);
@@ -220,6 +263,8 @@ const getSuggestedUsers = async (req, res) => {
 	}
 };
 
+
+// Function to freeze a user account
 const freezeAccount = async (req, res) => {
 	try {
 		const user = await User.findById(req.user._id);
@@ -227,6 +272,8 @@ const freezeAccount = async (req, res) => {
 			return res.status(400).json({ error: "User not found" });
 		}
 
+
+		// Set isFrozen flag to true
 		user.isFrozen = true;
 		await user.save();
 

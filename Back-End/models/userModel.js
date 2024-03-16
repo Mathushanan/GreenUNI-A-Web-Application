@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 
+
+
+// Define user schema
 const userSchema = mongoose.Schema(
 	{
 		name: {
@@ -47,6 +50,8 @@ const userSchema = mongoose.Schema(
 	}
 );
 
+
+// Create User model from the user schema
 const User = mongoose.model("User", userSchema);
 
 export default User;
