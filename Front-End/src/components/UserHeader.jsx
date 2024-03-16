@@ -12,9 +12,15 @@ import useFollowUnfollow from "../hooks/useFollowUnfollow";
 
 const UserHeader = ({ user }) => {
 	const toast = useToast();
+
+	// Get current user from Recoil state
 	const currentUser = useRecoilValue(userAtom);
+	
+	// Custom hook for handling follow/unfollow functionality
 	const { handleFollowUnfollow, following, updating } = useFollowUnfollow(user);
 
+
+	// Function to copy current URL to clipboard
 	const copyURL = () => {
 		const currentURL = window.location.href;
 		navigator.clipboard.writeText(currentURL).then(() => {
@@ -28,6 +34,8 @@ const UserHeader = ({ user }) => {
 		});
 	};
 
+
+	//Return UserHeader component
 	return (
 		<VStack gap={4} alignItems={"start"}>
 			<Flex justifyContent={"space-between"} w={"full"}>

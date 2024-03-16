@@ -4,11 +4,16 @@ import SuggestedUser from "./SuggestedUser";
 import useShowToast from "../hooks/useShowToast";
 
 const SuggestedUsers = () => {
+
+
+    // State to manage loading state and suggested users data
 	const [loading, setLoading] = useState(true);
 	const [suggestedUsers, setSuggestedUsers] = useState([]);
 	const showToast = useShowToast();
 
 	useEffect(() => {
+
+        // Function to fetch suggested users from the server
 		const getSuggestedUsers = async () => {
 			setLoading(true);
 			try {
@@ -26,9 +31,13 @@ const SuggestedUsers = () => {
 			}
 		};
 
+        // Call the function to fetch suggested users when the component mounts
 		getSuggestedUsers();
+
 	}, [showToast]);
 
+
+    //Return Suggested user Components
 	return (
 		<>
 			<Text mb={4} fontWeight={"bold"}>
@@ -61,20 +70,3 @@ const SuggestedUsers = () => {
 
 export default SuggestedUsers;
 
-// Loading skeletons for suggested users, if u want to copy and paste as shown in the tutorial
-
-// <Flex key={idx} gap={2} alignItems={"center"} p={"1"} borderRadius={"md"}>
-// 							{/* avatar skeleton */}
-// 							<Box>
-// 								<SkeletonCircle size={"10"} />
-// 							</Box>
-// 							{/* username and fullname skeleton */}
-// 							<Flex w={"full"} flexDirection={"column"} gap={2}>
-// 								<Skeleton h={"8px"} w={"80px"} />
-// 								<Skeleton h={"8px"} w={"90px"} />
-// 							</Flex>
-// 							{/* follow button skeleton */}
-// 							<Flex>
-// 								<Skeleton h={"20px"} w={"60px"} />
-// 							</Flex>
-// 						</Flex>

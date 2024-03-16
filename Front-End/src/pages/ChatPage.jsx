@@ -10,16 +10,35 @@ import { conversationsAtom, selectedConversationAtom } from "../atoms/messagesAt
 import userAtom from "../atoms/userAtom";
 import { useSocket } from "../context/SocketContext";
 
+
+
+
 const ChatPage = () => {
+
+	// State for indicating whether a user is being searched
 	const [searchingUser, setSearchingUser] = useState(false);
+	
+	// State for indicating whether conversations are loading
 	const [loadingConversations, setLoadingConversations] = useState(true);
+	
+	// State for storing search text
 	const [searchText, setSearchText] = useState("");
+	
+	// State for storing the selected conversation
 	const [selectedConversation, setSelectedConversation] = useRecoilState(selectedConversationAtom);
+	
+	// State for storing conversations
 	const [conversations, setConversations] = useRecoilState(conversationsAtom);
+	
+	// Current user obtained from Recoil state
 	const currentUser = useRecoilValue(userAtom);
 	const showToast = useShowToast();
+	
+	// Socket and online users obtained from useSocket hook
 	const { socket, onlineUsers } = useSocket();
 
+
+	 // Effect hook to handle messagesSeen event from socket
 	useEffect(() => {
 		socket?.on("messagesSeen", ({ conversationId }) => {
 			setConversations((prev) => {
@@ -40,6 +59,8 @@ const ChatPage = () => {
 		});
 	}, [socket, setConversations]);
 
+
+	// Effect hook to fetch conversations when the component mounts
 	useEffect(() => {
 		const getConversations = async () => {
 			try {
@@ -61,6 +82,8 @@ const ChatPage = () => {
 		getConversations();
 	}, [showToast, setConversations]);
 
+
+	// Function to handle conversation search
 	const handleConversationSearch = async (e) => {
 		e.preventDefault();
 		setSearchingUser(true);

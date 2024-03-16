@@ -12,4 +12,6 @@ const AuthPage = () => {
     return <>{authScreenState === "login" ? <LoginCard /> : <SignupCard />}</>;
 };
 
+
+// Export AuthPage component as the default export
 export default AuthPage;

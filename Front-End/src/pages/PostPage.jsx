@@ -11,16 +11,33 @@ import userAtom from "../atoms/userAtom";
 import { DeleteIcon } from "@chakra-ui/icons";
 import postsAtom from "../atoms/postsAtom";
 
+
+// PostPage component
 const PostPage = () => {
+
+	// Custom hook to get user profile
 	const { user, loading } = useGetUserProfile();
+	
+	// Recoil state for posts
 	const [posts, setPosts] = useRecoilState(postsAtom);
+	
+	// Custom hook to show toast messages
 	const showToast = useShowToast();
+	
+	// Getting post ID from URL params
 	const { pid } = useParams();
+	
+	// Getting current user from Recoil state
 	const currentUser = useRecoilValue(userAtom);
+	
+	// Navigation hook from react-router-dom
 	const navigate = useNavigate();
 
+
+	// Getting current post
 	const currentPost = posts[0];
 
+	// Effect to fetch post data
 	useEffect(() => {
 		const getPost = async () => {
 			setPosts([]);
@@ -39,6 +56,8 @@ const PostPage = () => {
 		getPost();
 	}, [showToast, pid, setPosts]);
 
+
+	// Function to handle post deletion
 	const handleDeletePost = async () => {
 		try {
 			if (!window.confirm("Are you sure you want to delete this post?")) return;
@@ -58,6 +77,8 @@ const PostPage = () => {
 		}
 	};
 
+
+	// Loading spinner if user data is being fetched
 	if (!user && loading) {
 		return (
 			<Flex justifyContent={"center"}>
@@ -66,9 +87,13 @@ const PostPage = () => {
 		);
 	}
 
+
+	// If there's no current post, return null
 	if (!currentPost) return null;
 	console.log("currentPost", currentPost);
 
+
+	// Render PostPage component
 	return (
 		<>
 			<Flex>

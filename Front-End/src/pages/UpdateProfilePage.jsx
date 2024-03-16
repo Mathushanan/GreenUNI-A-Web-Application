@@ -17,6 +17,8 @@ import usePreviewImg from "../hooks/usePreviewImg";
 import useShowToast from "../hooks/useShowToast";
 
 export default function UpdateProfilePage() {
+	
+	// Using Recoil state for user data
 	const [user, setUser] = useRecoilState(userAtom);
 	const [inputs, setInputs] = useState({
 		name: user.name,
@@ -25,16 +27,23 @@ export default function UpdateProfilePage() {
 		bio: user.bio,
 		password: "",
 	});
+
+	// Reference for file input element
 	const fileRef = useRef(null);
+	
+	// State for handling update process
 	const [updating, setUpdating] = useState(false);
 
 	const showToast = useShowToast();
 
+	//Custom hook for handling image preview
 	const { handleImageChange, imgUrl } = usePreviewImg();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (updating) return;
+
+		// Setting updating state to true during the update process
 		setUpdating(true);
 		try {
 			const res = await fetch(`/api/users/update/${user._id}`, {
@@ -58,6 +67,8 @@ export default function UpdateProfilePage() {
 			setUpdating(false);
 		}
 	};
+
+	//Render UpdateProfile Page
 	return (
 		<form onSubmit={handleSubmit}>
 			<Flex align={"center"} justify={"center"} my={6}>

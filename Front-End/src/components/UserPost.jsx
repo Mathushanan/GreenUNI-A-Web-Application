@@ -9,10 +9,13 @@ import Actions from "../components/Actions";
 
 
 const UserPost = ({postImg,postTitle,likes,replies}) => {
+    
+    // Using useState hook to manage the state of 'liked' variable, initialized as false
     const [liked, setLiked] = useState(false);
 
     return (
         
+        // Link component for navigation to a specific post page
         <Link to={"/markzuckerberg/post/1"}>
             <Flex gap={3} mb={4} py={5}>
                 <Flex flexDirection={"column"} alignItems={"center"}>

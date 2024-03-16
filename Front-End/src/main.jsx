@@ -10,6 +10,8 @@ import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { SocketContextProvider } from "./context/SocketContext.jsx";
 
+
+// Define styles for the app
 const styles = {
 	global: (props) => ({
 		body: {
@@ -19,11 +21,15 @@ const styles = {
 	}),
 };
 
+
+// Define configuration for the Chakra UI theme
 const config = {
 	initialColorMode: "dark",
 	useSystemColorMode: true,
 };
 
+
+// Define custom colors for the theme
 const colors = {
 	gray: {
 		light: "#616161",
@@ -31,8 +37,12 @@ const colors = {
 	},
 };
 
+
+// Extend the Chakra UI theme with custom configuration, styles, and colors
 const theme = extendTheme({ config, styles, colors });
 
+
+// Render the app to the DOM
 ReactDOM.createRoot(document.getElementById("root")).render(
 	
 	<React.StrictMode>

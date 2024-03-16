@@ -7,9 +7,16 @@ import postsAtom from "../atoms/postsAtom";
 import SuggestedUsers from "../components/SuggestedUsers";
 
 const HomePage = () => {
+
+	// State variables
 	const [posts, setPosts] = useRecoilState(postsAtom);
+	
+	// State for indicating whether posts are loading
 	const [loading, setLoading] = useState(true);
 	const showToast = useShowToast();
+	
+	
+	// Effect hook to fetch feed posts when the component mounts
 	useEffect(() => {
 		const getFeedPosts = async () => {
 			setLoading(true);
