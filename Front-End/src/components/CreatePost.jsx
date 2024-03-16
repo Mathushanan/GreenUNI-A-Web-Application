@@ -30,6 +30,8 @@ import { useParams } from "react-router-dom";
 const MAX_CHAR = 500;
 
 const CreatePost = () => {
+
+	// Hooks for managing state and behavior
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [postText, setPostText] = useState("");
 	const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg();
@@ -41,6 +43,8 @@ const CreatePost = () => {
 	const [posts, setPosts] = useRecoilState(postsAtom);
 	const { username } = useParams();
 
+
+	// Function to handle text input change
 	const handleTextChange = (e) => {
 		const inputText = e.target.value;
 
@@ -54,6 +58,8 @@ const CreatePost = () => {
 		}
 	};
 
+
+	// Function to handle post creation
 	const handleCreatePost = async () => {
 		setLoading(true);
 		try {
@@ -84,6 +90,8 @@ const CreatePost = () => {
 		}
 	};
 
+
+	// Render the Create Post component
 	return (
 		<>
 			<Button

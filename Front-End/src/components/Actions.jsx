@@ -31,20 +31,32 @@ const Actions = ({ post }) => {
 	const showToast = useShowToast();
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
+
+	// Function to handle liking and unliking a post
 	const handleLikeAndUnlike = async () => {
+		
+		// Check if user is logged in
 		if (!user) return showToast("Error", "You must be logged in to like a post", "error");
+		
+		// Prevent multiple requests while processing
 		if (isLiking) return;
+		
 		setIsLiking(true);
+
 		try {
+
+			// Send request to server to like/unlike the post
 			const res = await fetch("/api/posts/like/" + post._id, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
 				},
 			});
+
 			const data = await res.json();
 			if (data.error) return showToast("Error", data.error, "error");
 
+			// Update local state based on like action
 			if (!liked) {
 				
 				const updatedPosts = posts.map((p) => {
@@ -73,10 +85,13 @@ const Actions = ({ post }) => {
 		}
 	};
 
+
+	// Function to handle replying to a post
 	const handleReply = async () => {
 		if (!user) return showToast("Error", "You must be logged in to reply to a post", "error");
 		if (isReplying) return;
 		setIsReplying(true);
+		
 		try {
 			const res = await fetch("/api/posts/reply/" + post._id, {
 				method: "PUT",
@@ -88,16 +103,19 @@ const Actions = ({ post }) => {
 			const data = await res.json();
 			if (data.error) return showToast("Error", data.error, "error");
 
+			// Add the newly created reply to the post's replies array
 			const updatedPosts = posts.map((p) => {
 				if (p._id === post._id) {
 					return { ...p, replies: [...p.replies, data] };
 				}
 				return p;
 			});
+
 			setPosts(updatedPosts);
 			showToast("Success", "Reply posted successfully", "success");
 			onClose();
 			setReply("");
+
 		} catch (error) {
 			showToast("Error", error.message, "error");
 		} finally {
@@ -105,6 +123,8 @@ const Actions = ({ post }) => {
 		}
 	};
 
+
+	// Render the Actions component
 	return (
 		<Flex flexDirection='column'>
 			<Flex gap={3} my={2} onClick={(e) => e.preventDefault()}>

@@ -15,7 +15,11 @@ import userAtom from "../atoms/userAtom";
 import { BsCheck2All, BsFillImageFill } from "react-icons/bs";
 import { selectedConversationAtom } from "../atoms/messagesAtom";
 
+
+// Define the Conversation component
 const Conversation = ({ conversation, isOnline }) => {
+
+	// Extract necessary data from the conversation and state
 	const user = conversation.participants[0];
 	const currentUser = useRecoilValue(userAtom);
 	const lastMessage = conversation.lastMessage;
@@ -23,6 +27,8 @@ const Conversation = ({ conversation, isOnline }) => {
 	const colorMode = useColorMode();
 
 	console.log("selectedConverstion", selectedConversation);
+
+	// Render the Conversation component
 	return (
 		<Flex
 			gap={4}

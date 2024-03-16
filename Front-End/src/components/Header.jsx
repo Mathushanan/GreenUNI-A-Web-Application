@@ -11,11 +11,21 @@ import { BsFillChatQuoteFill } from "react-icons/bs";
 import { MdOutlineSettings } from "react-icons/md";
 
 const Header = () => {
+	
+	// Using Chakra UI's useColorMode hook to handle color mode toggling
 	const { colorMode, toggleColorMode } = useColorMode();
+
+	// Retrieving user data using Recoil's useRecoilValue hook
 	const user = useRecoilValue(userAtom);
+
+	// Using the useLogout hook to handle user logout functionality
 	const logout = useLogout();
+
+	 // Using Recoil's useSetRecoilState hook to manage the authentication screen state
 	const setAuthScreen = useSetRecoilState(authScreenAtom);
 
+
+	// Rendering the header component
 	return (
 		<Flex justifyContent={"space-between"} mt={6} mb='12'>
 			{user && (

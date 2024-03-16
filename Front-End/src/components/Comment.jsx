@@ -1,6 +1,11 @@
 import { Avatar, Divider, Flex, Text } from "@chakra-ui/react";
 
+
+
+// Comment component to display a single reply to a post
 const Comment = ({ reply, lastReply }) => {
+
+	// Render the Comment component
 	return (
 		<>
 			<Flex gap={4} py={2} my={2} w={"full"}>

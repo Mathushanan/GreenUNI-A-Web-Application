@@ -8,17 +8,41 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { useSocket } from "../context/SocketContext.jsx";
 import messageSound from "../assets/message.mp3";
+
+
+
+
+
 const MessageContainer = () => {
+
 	const showToast = useShowToast();
+
+	// Getting the selected conversation from Recoil state
 	const selectedConversation = useRecoilValue(selectedConversationAtom);
+
+	// State to track loading state of messages
 	const [loadingMessages, setLoadingMessages] = useState(true);
+
+	// State to store messages
 	const [messages, setMessages] = useState([]);
+
+	// Getting current user data from Recoil state
 	const currentUser = useRecoilValue(userAtom);
+
+	// Using the useSocket hook to access socket
 	const { socket } = useSocket();
+
+	// Setting conversations state using Recoil hook
 	const setConversations = useSetRecoilState(conversationsAtom);
+
+	// Ref for scrolling to the end of messages
 	const messageEndRef = useRef(null);
 
+
+	// Effect to handle new message events from the socket
 	useEffect(() => {
+
+		// Adding new message to messages state if it belongs to the selected conversation
 		socket.on("newMessage", (message) => {
 			if (selectedConversation._id === message.conversationId) {
 				setMessages((prev) => [...prev, message]);
@@ -30,6 +54,8 @@ const MessageContainer = () => {
 				sound.play();
 			}
 
+
+			// Updating last message in conversation state
 			setConversations((prev) => {
 				const updatedConversations = prev.map((conversation) => {
 					if (conversation._id === message.conversationId) {
@@ -47,9 +73,13 @@ const MessageContainer = () => {
 			});
 		});
 
+
+		// Removing event listener when component unmounts
 		return () => socket.off("newMessage");
 	}, [socket, selectedConversation, setConversations]);
 
+
+	 // Effect to handle message seen events
 	useEffect(() => {
 		const lastMessageIsFromOtherUser = messages.length && messages[messages.length - 1].sender !== currentUser._id;
 		if (lastMessageIsFromOtherUser) {
@@ -77,10 +107,14 @@ const MessageContainer = () => {
 		});
 	}, [socket, currentUser._id, messages, selectedConversation]);
 
+
+	// Effect to scroll to the end of messages when messages change
 	useEffect(() => {
 		messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [messages]);
 
+
+	// Effect to fetch messages when selected conversation changes
 	useEffect(() => {
 		const getMessages = async () => {
 			setLoadingMessages(true);
@@ -104,6 +138,8 @@ const MessageContainer = () => {
 		getMessages();
 	}, [showToast, selectedConversation.userId, selectedConversation.mock]);
 
+
+	// Rendering the MessageContainer component
 	return (
 		<Flex
 			flex='70'

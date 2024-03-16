@@ -12,12 +12,23 @@ import userAtom from "../atoms/userAtom";
 import postsAtom from "../atoms/postsAtom";
 
 const Post = ({ post, postedBy }) => {
+
+	// State for post user
 	const [user, setUser] = useState(null);
+	
 	const showToast = useShowToast();
+
+	// Current logged-in user
 	const currentUser = useRecoilValue(userAtom);
+	
+    // State for posts
 	const [posts, setPosts] = useRecoilState(postsAtom);
+	
+	// Navigation hook
 	const navigate = useNavigate();
 
+
+	// Fetching user data for the post
 	useEffect(() => {
 		const getUser = async () => {
 			try {
@@ -27,23 +38,28 @@ const Post = ({ post, postedBy }) => {
 					showToast("Error", data.error, "error");
 					return;
 				}
+
+				// Setting user data
 				setUser(data);
+
 			} catch (error) {
 				showToast("Error", error.message, "error");
 				setUser(null);
 			}
 		};
 
-		getUser();
+		getUser();// Invoking function to fetch user data
+
 	}, [postedBy, showToast]);
 
+	// Handling post deletion
 	const handleDeletePost = async (e) => {
 		try {
-			e.preventDefault();
+			e.preventDefault();// Preventing default form submission behavior
 			if (!window.confirm("Are you sure you want to delete this post?")) return;
 
 			const res = await fetch(`/api/posts/${post._id}`, {
-				method: "DELETE",
+				method: "DELETE", //Sending DELETE request to delete the post
 			});
 			const data = await res.json();
 			if (data.error) {
@@ -57,7 +73,11 @@ const Post = ({ post, postedBy }) => {
 		}
 	};
 
+
+	// Returning null if user data is not available yet
 	if (!user) return null;
+	
+	// Rendering the post content
 	return (
 		<Link to={`/${user.username}/post/${post._id}`}>
 			<Flex gap={3} mb={4} py={5}>

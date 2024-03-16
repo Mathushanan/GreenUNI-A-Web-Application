@@ -6,9 +6,17 @@ import { BsCheck2All } from "react-icons/bs";
 import { useState } from "react";
 
 const Message = ({ ownMessage, message }) => {
+	
+	// Getting selected conversation from Recoil state
 	const selectedConversation = useRecoilValue(selectedConversationAtom);
+	
+	// Getting user data from Recoil state
 	const user = useRecoilValue(userAtom);
+	
+	// State to track image loading status
 	const [imgLoaded, setImgLoaded] = useState(false);
+	
+	// Rendering message component based on whether it's own message or not
 	return (
 		<>
 			{ownMessage ? (

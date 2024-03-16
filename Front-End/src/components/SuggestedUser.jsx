@@ -3,8 +3,12 @@ import { Link } from "react-router-dom";
 import useFollowUnfollow from "../hooks/useFollowUnfollow";
 
 const SuggestedUser = ({ user }) => {
+
+    // Destructuring values from the custom hook useFollowUnfollow
 	const { handleFollowUnfollow, following, updating } = useFollowUnfollow(user);
 
+
+    //Return Suggested user Component
 	return (
 		<Flex gap={2} justifyContent={"space-between"} alignItems={"center"}>
 			{/* left side */}

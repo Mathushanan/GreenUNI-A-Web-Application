@@ -23,6 +23,8 @@ import userAtom from '../atoms/userAtom';
 import useShowToast from '../hooks/useShowToast';
 
 export default function SignupCard() {
+  
+  // State initialization
   const [showPassword, setShowPassword] = useState(false)
   const [inputs, setInputs] = useState({
     name: '',
@@ -31,10 +33,12 @@ export default function SignupCard() {
     password: ''
   });
 
+  // Hooks initialization
   const showToast = useShowToast();
 	const setUser = useSetRecoilState(userAtom);
 
 
+  // Function to handle signup process
   const handleSignup = async () => {
     try {
       const res = await fetch("/api/users/signup", {
@@ -58,6 +62,8 @@ export default function SignupCard() {
     }
   };
 
+
+  // Rendering the signup form
   return (
     <Flex
 

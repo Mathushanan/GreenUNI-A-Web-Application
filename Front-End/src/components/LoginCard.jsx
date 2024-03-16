@@ -21,16 +21,28 @@ import useShowToast from "../hooks/useShowToast";
 import userAtom from "../atoms/userAtom";
 
 export default function LoginCard() {
+
+	// State for toggling password visibility
 	const [showPassword, setShowPassword] = useState(false);
+
+	// Recoil state setter for authentication screen state
 	const setAuthScreen = useSetRecoilState(authScreenAtom);
+
+	// Recoil state setter for user data
 	const setUser = useSetRecoilState(userAtom);
+	
+	// State for loading state during login request
 	const [loading, setLoading] = useState(false);
 
+	// State for form inputs
 	const [inputs, setInputs] = useState({
 		username: "",
 		password: "",
 	});
+
 	const showToast = useShowToast();
+	
+	// Function to handle login process
 	const handleLogin = async () => {
 		setLoading(true);
 		try {
@@ -54,6 +66,8 @@ export default function LoginCard() {
 			setLoading(false);
 		}
 	};
+
+	// Rendering the LoginCard component
 	return (
 		<Flex align={"center"} justify={"center"}>
 			<Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
